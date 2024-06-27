@@ -5,8 +5,46 @@ import java.util.*;
 
 class Solution {
     public int evalRPN(String[] tokens) {
-        //creating an empty stack
-        Stack <Integer> stack = new Stack<Integer>();
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0; i < tokens.length; i++){
+            String s = tokens[i];
+            if(isNumber(s)){
+                stack.push(Integer.valueOf(s));
+            }
+            else{
+                int opp2 = stack.pop();
+                int opp1 = stack.pop();
+                stack.push(operate(opp1, opp2, s));
+            }
+        }
+        return stack.pop();
+    }
+
+    private Boolean isNumber(String s){
+        if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/")){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    private int operate(int opp1, int opp2, String operation){
+            if(operation.equals("+")){
+                return opp1 + opp2;
+            }
+            else if(operation.equals("-")){
+                return opp1 - opp2;
+            }
+            else if(operation.equals("*")){
+                return opp1 * opp2;
+            }
+            else{
+                return opp1 / opp2;
+            }
+    }
+}
+    
      /*   
         // Iterating ArrayList using Iterator
         Iterator it = numbers.iterator();
@@ -19,46 +57,7 @@ class Solution {
             System.out.print(it.next() + " ");
     */
 
-        for (String token : tokens) {
-            if (isDigit(token) ||  (token.length() > 1 && token.charAt(0) == '-' && isDigit(token.substring(1)))){
-                int val = Integer.parseInt(token);
-                stack.push(val);
-            }else{
-                int pop1 = stack.pop();
-                int pop2 = stack.pop();
-
-                int result = 0;
-                switch (token){
-                    case "+":
-                    result = pop2 + pop1;
-                    break;
-                    case "-":
-                        result = pop2 - pop1;
-                        break;
-                    case "*":
-                        result = pop2 * pop1;
-                        break;
-                    case "/":
-                        result = pop2 / pop1;
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid operator");
-                }
-                stack.push(result);
-            }
-        } return stack.pop();
-    }
-    
-    private boolean isDigit(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-}
-
+       
 class EvalRPN{
     public static void main(String args[]){
         String [] t1 = {"2","1","+","3","*"};
